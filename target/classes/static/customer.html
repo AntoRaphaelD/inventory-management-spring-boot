@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="SimpleMarket - Customer Portal">
+    <title>SimpleMarket - Customer Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-container">
+            <div class="logo">SimpleMarket</div>
+            <div class="user-controls">
+                <div class="user-info">
+                    <span id="userGreeting">Welcome</span>
+                </div>
+                <button onclick="logout()" class="btn-logout" aria-label="Logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="dashboard customer-dashboard">
+            <div class="dashboard-header">
+                <h1>Customer Portal</h1>
+                <div class="dashboard-actions">
+                    <div class="theme-toggle">
+                        <input type="checkbox" id="themeSwitch" class="theme-switch">
+                    </div>
+                </div>
+            </div>
+                <section class="card products-section">
+                    <div class="card-header">
+                        <h2>Available Products</h2>
+                        <div class="search-container">
+                            <input type="text" id="productSearch" placeholder="Search products..." aria-label="Search products">
+                            <button id="searchButton" class="btn-icon" aria-label="Search">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div id="productFilters" class="filters">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="in-stock">In Stock</button>
+                            <button class="filter-btn" data-filter="low-stock">Low Stock</button>
+                        </div>
+                        <div id="loadingProducts" class="loading-indicator">
+                            <div class="spinner"></div>
+                            <span>Loading products...</span>
+                        </div>
+                        <ul id="productList" class="product-list"></ul>
+                        <div id="noProductsMessage" class="empty-state hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <p>No products found.</p>
+                        </div>
+                    </div>
+                </section>
+                <section class="card order-section"  style="margin-top: 50px;">
+                    <div class="card-header" style="margin-top: 50px;justify-content: center;">
+                        <h2 style="text-align: center;">Place Order</h2>
+                    </div>
+                    <div class="card-content">
+                        <form id="orderForm" class="order-form">
+                            <div class="input-group">
+                                <label for="productName">Product</label>
+                                <input id="productName" type="text" placeholder="Enter product name" required />
+                            </div>
+
+                            <div class="input-group">
+                                <label for="quantity">Quantity</label>
+                                <div class="quantity-control">
+                                    <button type="button" class="quantity-btn" id="decreaseQuantity" aria-label="Decrease quantity">-</button>
+                                    <input id="quantity" type="number" min="1" value="1" required />
+                                    <button type="button" class="quantity-btn" id="increaseQuantity" aria-label="Increase quantity">+</button>
+                                </div>
+                                <div id="quantityFeedback" class="input-feedback"></div>
+                            </div>
+                            <div class="input-group">
+                                <label for="buyer">Your Name</label>
+                                <input id="buyer" placeholder="Your Name" required />
+                            </div>
+                            <div class="input-group">
+                                <label for="shippingAddress">Shipping Address</label>
+                                <textarea id="shippingAddress" placeholder="Enter your shipping address" rows="3"></textarea>
+                            </div>
+                            <button type="submit" id="placeOrderBtn" class="btn-primary">Place Order</button>
+                            <div id="orderStatus" class="order-status" role="alert" aria-live="assertive"></div>
+                        </form>
+                    </div>
+                </section>
+            <!-- </div> -->
+        </div>
+    </main>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Shopping Cart</h2>
+                <button id="closeCartModal" class="close-modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <ul id="cartItems" class="cart-items"></ul>
+                <div id="emptyCart" class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <p>Your cart is empty</p>
+                </div>
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cartTotal">$0.00</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="clearCart" class="btn-secondary">Clear Cart</button>
+                <button id="checkoutBtn" class="btn-primary">Checkout</button>
+            </div>
+        </div>
+    </div>
+    <script src="customer.js"></script>
+</body>
+</html>
